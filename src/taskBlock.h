@@ -11,12 +11,13 @@
 typedef void (*TaskHandlerType)(void*);
 
 struct TaskBlock {
+  char status;
   unsigned int priority;  // 优先级 0 -- 63，数值越大，优先级越高
+  unsigned int stackSize;
   TaskHandlerType taskFunc;
   void* taskArgs;
   char* runtimeStack;  // 运行时栈
-  unsigned int stackSize;
-  char status;
+  size_t lastUpdateAt;
   EasyEnv context;
 };
 

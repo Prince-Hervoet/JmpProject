@@ -14,4 +14,7 @@ struct EasyEnv {
 
 typedef struct EasyEnv EasyEnv;
 
+void SetStackPtr(char* sp);
+void SetFuncEntry(void (*func)(void* args));
+
 #endif
