@@ -32,5 +32,6 @@ void InsertData(LinkedList* list, any data);
 ListNode* GetNext(LinkedList* list);
 void ResetCursor(LinkedList* list);
 void RemoveListNode(LinkedList* list, ListNode* target);
+unsigned int Size(LinkedList* list);
 
 #endif

@@ -26,7 +26,7 @@ LinkedList* MakeLinkedList(FreeDataType freeFunc) {
   list->headNode = headNode;
   list->freeFunc = freeFunc;
   list->size = 0;
-  list->cursor = (ListNode*)headNode;
+  list->cursor = NULL;
   return list;
 }
 
@@ -50,14 +50,22 @@ void RemoveListNode(LinkedList* list, ListNode* target) {
   list->freeFunc(target->dataPtr);
   target->next = NULL;
   target->prev = NULL;
+  // 如果删除的节点刚好是cursor的节点，就重置为上一个
+  if (list->cursor == target) {
+    list->cursor = target->prev;
+  }
   free(target);
   list->size -= 1;
 }
 
 ListNode* GetNext(LinkedList* list) {
   if (list == NULL || list->size == 0) return NULL;
-  while (list->cursor == list->headNode) {
-    list->cursor = list->cursor->next;
+  if (list->cursor == NULL) {
+    list->cursor = list->headNode->next;
+  } else {
+    do {
+      list->cursor = list->cursor->next;
+    } while (list->cursor == list->headNode);
   }
   return list->cursor;
 }
@@ -66,3 +74,5 @@ void ResetCursor(LinkedList* list) {
   if (list == NULL) return;
   list->cursor = (ListNode*)list->headNode;
 }
+
+unsigned int Size(LinkedList* list) { return list->size; }
