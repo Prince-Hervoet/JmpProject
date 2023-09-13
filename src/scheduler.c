@@ -2,10 +2,21 @@
 
 #include <setjmp.h>
 #include <stddef.h>
+#include <stdlib.h>
 
-static void test() {}
+static TaskBlock* makeTaskBlock(TaskHandlerType taskFunc, void* args,
+                                unsigned int priority) {
+  TaskBlock* tb = (TaskBlock*)malloc(sizeof(TaskBlock));
+  tb->taskFunc = taskFunc;
+  tb->taskArgs = args;
+  tb->priority = priority;
+  tb->status = TASK_STATUS_NEW;
+  tb->runtimeStack = NULL;
+  tb->stackSize = 0;
+  return tb;
+}
 
-static void taskRunFunc(void* args) {}
+static void wrapRunFunc(void* args) {}
 
 static void executeList(LinkedList* list) {
   ListNode* node = GetNext(list);
@@ -13,14 +24,46 @@ static void executeList(LinkedList* list) {
     return;
   }
   TaskBlock* tb = (TaskBlock*)(node->dataPtr);
-  tb->taskFunc(tb->taskArgs);
+  switch (tb->status) {
+    case TASK_STATUS_NEW:
+      tb->runtimeStack = (char*)malloc(sizeof(char) * TASK_DEFAULT_STACK_SIZE);
+      tb->stackSize = TASK_DEFAULT_STACK_SIZE;
+      tb->context.rsp = tb->runtimeStack + (TASK_DEFAULT_STACK_SIZE - 1);
+      tb->context.rip = &wrapRunFunc;
+      tb->status = TASK_STATUS_READY;
+      break;
+    case TASK_STATUS_READY:
+      break;
+    default:
+      return;
+  }
+}
+
+void CreateTask(Scheduler* sc, TaskHandlerType taskFunc, void* args,
+                unsigned int priority) {
+  if (sc == NULL || taskFunc == NULL || priority >= DEFAULT_TASK_LIST_COUNT) {
+    return;
+  }
+  TaskBlock* tb = makeTaskBlock(taskFunc, args, priority);
+  LinkedList* list = sc->taskLists[priority];
+  InsertData(list, tb);
+  sc->maxPriority = priority > sc->maxPriority ? priority : sc->maxPriority;
 }
 
 void Schedule(Scheduler* sc) {
   if (sc == NULL) return;
-  jmp_buf host;
-  LinkedList** lists = sc->taskLists;
-  for (int i = DEFAULT_TASK_LIST_COUNT - 1; i >= 0; --i) {
-    executeList(lists[i]);
+  int currentIndex = DEFAULT_TASK_LIST_COUNT - 1;
+}
+
+void ScheduleOnce(Scheduler* sc) {
+  if (sc == NULL || sc->taskSize == 0) return;
+  int currentIndex = DEFAULT_TASK_LIST_COUNT - 1;
+  LinkedList** taskLists = sc->taskLists;
+  while (sc->taskSize != 0) {
+    // 从高到低找到第一个有任务的队列
+    while (taskLists[currentIndex]->size == 0) {
+      --currentIndex;
+    }
+    executeList(taskLists[currentIndex]);
   }
 }

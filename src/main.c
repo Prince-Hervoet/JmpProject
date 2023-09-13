@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "easyEnv.h"
+#include "scheduler.h"
 
 struct A {
   int a;
@@ -12,13 +12,6 @@ struct B {
 };
 
 int main() {
-  EasyEnv test;
-  int ret;
-  ret = saveEnv(&test);
-  if (ret == 0) {
-    printf("from setjmp\n");
-    resumeEnv(&test);
-  } else {
-    printf("from longjmp\n");
-  }
+  Scheduler* sc = MakeScheduler();
+  Schedule(sc);
 }

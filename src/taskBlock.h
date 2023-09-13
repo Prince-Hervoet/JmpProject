@@ -7,6 +7,7 @@
 #define TASK_STATUS_RUNNING 2
 #define TASK_STATUS_PENDING 4
 #define TASK_STATUS_DEAD 8
+#define TASK_DEFAULT_STACK_SIZE 32768
 
 typedef void (*TaskHandlerType)(void*);
 
