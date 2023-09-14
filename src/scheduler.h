@@ -13,7 +13,7 @@ struct Scheduler {
   unsigned int taskSize;
   unsigned int maxPriority;
   boolean isHigherFlag;
-  EasyEnv env;
+  EasyEnv context;
 };
 
 typedef struct Scheduler Scheduler;

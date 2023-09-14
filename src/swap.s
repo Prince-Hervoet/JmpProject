@@ -1,5 +1,5 @@
-.global saveEnv, resumeEnv, resumeEnvArgs
-saveEnv:
+.global AsSaveEnv, AsResumeEnv, AsResumeEnvArgs
+AsSaveEnv:
 	leaq 8(%rsp), %rdx
 	movq %rdx, (0)(%rdi)
 	movq %rbp, (8)(%rdi)
@@ -12,7 +12,7 @@ saveEnv:
 	movq $0, %rax
 	retq
 
-resumeEnv:
+AsResumeEnv:
 	movq (0)(%rdi), %rsp
 	movq (8)(%rdi), %rbp
 	movq (16)(%rdi), %rdx
@@ -24,7 +24,7 @@ resumeEnv:
 	movq $1, %rax
 	retq
 
-resumeEnvArgs:
+AsResumeEnvArgs:
 	movq (0)(%rdi), %rsp
 	movq (8)(%rdi), %rbp
 	movq (16)(%rdi), %rdx
