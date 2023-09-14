@@ -30,6 +30,7 @@ static void executeList(LinkedList* list) {
       tb->stackSize = TASK_DEFAULT_STACK_SIZE;
       tb->context.rsp = tb->runtimeStack + (TASK_DEFAULT_STACK_SIZE - 1);
       tb->context.rip = &wrapRunFunc;
+      tb->context.args = tb;
       tb->status = TASK_STATUS_READY;
       break;
     case TASK_STATUS_READY:

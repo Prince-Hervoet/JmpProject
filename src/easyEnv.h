@@ -10,6 +10,7 @@ struct EasyEnv {
   unsigned long r13;
   unsigned long r14;
   unsigned long r15;
+  void* args;
 };
 
 typedef struct EasyEnv EasyEnv;
