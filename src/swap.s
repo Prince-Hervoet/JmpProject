@@ -1,4 +1,4 @@
-.global saveEnv, resumeEnv
+.global saveEnv, resumeEnv, resumeEnvArgs
 saveEnv:
 	leaq 8(%rsp), %rdx
 	movq %rdx, (0)(%rdi)
@@ -22,4 +22,17 @@ resumeEnv:
 	movq (40)(%rdi), %r14
 	movq (48)(%rdi), %r15
 	movq $1, %rax
+	retq
+
+resumeEnvArgs:
+	movq (0)(%rdi), %rsp
+	movq (8)(%rdi), %rbp
+	movq (16)(%rdi), %rdx
+	movq %rdx, (%rsp)
+	movq (24)(%rdi), %r12
+	movq (32)(%rdi), %r13
+	movq (40)(%rdi), %r14
+	movq (48)(%rdi), %r15
+	movq $1, %rax
+	movq %rsi %rdi
 	retq
