@@ -4,6 +4,7 @@
 #include "linkedList.h"
 #include "taskBlock.h"
 #define DEFAULT_TASK_LIST_COUNT 64  // 默认优先级数量
+#define DEAFULT_TASK_RUNTIME 10     // ms
 #define boolean char
 #define true 1
 #define false 0
@@ -12,6 +13,7 @@ struct Scheduler {
   LinkedList* taskLists[DEFAULT_TASK_LIST_COUNT];
   unsigned int taskSize;
   unsigned int maxPriority;
+  TaskBlock* currentTask;
   boolean isHigherFlag;
   EasyEnv context;
 };

@@ -3,6 +3,15 @@
 #include <setjmp.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <time.h>
+
+Scheduler* sc;
+
+static void timerHandler() {
+  // 定时器中断
+  if (sc->currentTask == NULL || sc->currentTask->lastUpdateAt == -1) return;
+  clock_t now = clock();
+}
 
 static TaskBlock* makeTaskBlock(TaskHandlerType taskFunc, void* args,
                                 unsigned int priority) {
@@ -63,6 +72,8 @@ static void executeList(Scheduler* sc, LinkedList* list) {
   }
 }
 
+static void startTimerInterrupt(unsigned int timerMs) {}
+
 void CreateTask(Scheduler* sc, TaskHandlerType taskFunc, void* args,
                 unsigned int priority) {
   if (sc == NULL || taskFunc == NULL || priority >= DEFAULT_TASK_LIST_COUNT) {
@@ -82,6 +93,7 @@ void Schedule(Scheduler* sc) {
 void ScheduleOnce(Scheduler* sc) {
   if (sc == NULL || sc->taskSize == 0) return;
   int currentIndex = DEFAULT_TASK_LIST_COUNT - 1;
+  startTimerInterrupt(5);
   LinkedList** taskLists = sc->taskLists;
   while (sc->taskSize != 0) {
     // 从高到低找到第一个有任务的队列
