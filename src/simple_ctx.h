@@ -62,9 +62,12 @@ static inline SimpleCtx *GetSimpleCtx() {
   return ctx;
 }
 
-void JumpTo(SimpleCtx *current, SimpleCtx *target);
+static inline void JumpTo(SimpleCtx *current, SimpleCtx *target) {
+  JumpTo_asm(current, target);
+}
 
-static inline void TestFunc(relaxing::SimpleCtx *ctx1, relaxing::SimpleCtx *ctx2) {
+static inline void TestFunc(relaxing::SimpleCtx *ctx1,
+                            relaxing::SimpleCtx *ctx2) {
   Test(ctx1, ctx2);
 }
 
@@ -72,9 +75,7 @@ static inline void TestFunc(relaxing::SimpleCtx *ctx1, relaxing::SimpleCtx *ctx2
  * 将当前上下文存储到指定上下文结构体中
  * @param ctx
  */
-static inline void SaveCtx(SimpleCtx *ctx) {
-  SaveCtx_asm(ctx);
-}
+static inline void SaveCtx(SimpleCtx *ctx) { SaveCtx_asm(ctx); }
 
 /**
  * 设置栈指针
@@ -110,7 +111,7 @@ static inline void SetCtxEntry(SimpleCtx *ctx, void *func) {
  * @param link
  */
 static inline void SetCtxLink(SimpleCtx *ctx, SimpleCtx *link) {
-	ctx->registers[REGISTER_LINK] = link;
+  ctx->registers[REGISTER_LINK] = link;
 }
 
 /**
@@ -119,9 +120,9 @@ static inline void SetCtxLink(SimpleCtx *ctx, SimpleCtx *link) {
  * @return char*
  */
 static inline char *GetCtxSp(SimpleCtx *ctx) {
-  return (char *) (ctx->registers[13]);
+  return (char *)(ctx->registers[13]);
 }
 
-}
+}  // namespace relaxing
 
-#endif //RELAXING_ROUTINE__SIMPLE_CTX_H_
+#endif  // RELAXING_ROUTINE__SIMPLE_CTX_H_
