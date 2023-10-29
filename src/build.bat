@@ -1,4 +1,4 @@
-as --64 -o test.o test.s
+as --64 -o swap_ctx_asm.o swap_ctx_asm.S
 rmdir /s /q .\build
 md build
 cd build
