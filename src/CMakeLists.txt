@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.19)
+project(relaxing_routine)
+set(CMAKE_CXX_STANDARD 17)
+enable_language(C ASM)
+add_executable(relaxing_routine main.cpp test.o)
